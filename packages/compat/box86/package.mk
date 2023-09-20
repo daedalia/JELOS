@@ -15,7 +15,25 @@ if [ "${OPENGL}" = "no" ]; then
   PKG_DEPENDS_TARGET+=" gl4es"
 fi
 
-PKG_CMAKE_OPTS_TARGET+=" -DCMAKE_BUILD_TYPE=Release"
+case ${DEVICE} in
+  RK3399)
+    PKG_CMAKE_OPTS_TARGET+= " -D RK3399=1"
+  ;;
+  RK3588)
+    PKG_CMAKE_OPTS_TARGET+= " -D RK3588=1"
+  ;;
+  S922X*)
+    PKG_CMAKE_OPTS_TARGET+= " -D ODROIDN2=1"
+  ;;
+  AMD64)
+    PKG_CMAKE_OPTS_TARGET+= "-D CMAKE_C_FLAGS="-m32"  -D LD80BITS=1 -D NOALIGN=1"
+  ;;
+  *)
+    PKG_CMAKE_OPTS_TARGET+=" -D ARM64=1"
+  ;;
+esac
+
+PKG_CMAKE_OPTS_TARGET+=" -D CMAKE_BUILD_TYPE=Release"
 
 case ${TARGET_ARCH} in
   aarch64)
